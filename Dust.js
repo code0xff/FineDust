@@ -19,21 +19,21 @@ const dustStatus = {
   },
   'bad': {
     name: 'normal',
-    colors: ['#B40404', '#FF4000'],
+    colors: ['#FF0000', '#FFBF00'],
     state: '나쁨',
-    subtitle: '집돌이를 해야할 이유가 생겼다...',
+    subtitle: '오늘은 집돌이가 되겠어!',
     icon: 'sentiment-dissatisfied'
   },
   'superBad': {
     colors: ['#000000', '#D8D8D8'],
     state: '매우 나쁨',
-    subtitle: '살려줘...',
+    subtitle: '으앙 살려줘...',
     icon: 'sentiment-very-dissatisfied'
   }
 }
 
 // icon: sentiment-very-satisfied, sentiment-satisfied, sentiment-neutral, sentiment-dissatisfied, sentiment-very-dissatisfied
-function Dust({ pm10Value, pm25Value, district }) {
+function Dust({ pm10Value, pm25Value, district, reload }) {
   let status = null;
   if (pm10Value >= 151 || pm25Value >= 76) {
     status = 'superBad';
@@ -49,6 +49,14 @@ function Dust({ pm10Value, pm25Value, district }) {
     <LinearGradient 
         colors={dustStatus[status].colors} 
         style={styles.container}>
+      <View style={styles.menu}>
+        <MaterialIcons 
+          color='white' 
+          size={40} 
+          name='my-location' 
+          onPress={reload}
+          />
+      </View>
       <View style={styles.upper}>
         <MaterialIcons color='white' size={144} name={dustStatus[status].icon} />
         <Text style={styles.state}>
@@ -76,7 +84,8 @@ function Dust({ pm10Value, pm25Value, district }) {
 Dust.propTypes = {
   pm10Value: PropTypes.string.isRequired,
   pm25Value: PropTypes.string.isRequired,
-  district:  PropTypes.string.isRequired
+  district:  PropTypes.string.isRequired,
+  reload: PropTypes.func.isRequired
 }
 
 export default Dust;
@@ -85,8 +94,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
-  upper: {
+  menu: {
     flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    paddingRight: 20,
+    paddingTop: 20
+  },
+  upper: {
+    flex: 4,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -103,7 +119,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   lower: {
-    flex: 1,
+    flex: 4,
     alignItems: 'flex-start',
     justifyContent: 'flex-end',
     paddingLeft: 25

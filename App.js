@@ -14,6 +14,12 @@ export default class App extends Component {
   };
 
   componentDidMount () {
+    this._reload();
+  }
+
+  _reload = () => {
+    this.setState({isLoaded: false});
+
     navigator.geolocation.getCurrentPosition(
       position => {
         this._setFineDust(position.coords.latitude, position.coords.longitude);
@@ -38,6 +44,18 @@ export default class App extends Component {
     });
   }
 
+  _getDistrictName = (latitude, longitude) => {
+    const kakaoAPIKey = API_KEY.KAKAO_API_KEY;
+    
+    return fetch(`https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${longitude}&y=${latitude}`, {
+      method: 'GET',
+      headers: new Headers({
+        'Authorization' : `KakaoAK ${kakaoAPIKey}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      })
+    });
+  }
+
   _getStationName = (tmX, tmY) => {
     const airkoreaAPIKey = API_KEY.AIRKOREA_API_KEY;
     return fetch(`http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getNearbyMsrstnList?tmX=${tmX}&tmY=${tmY}&pageNo=1&numOfRows=1&ServiceKey=${airkoreaAPIKey}&_returnType=json`);
@@ -52,6 +70,12 @@ export default class App extends Component {
     this._transformPostion(latitude, longitude)
     .then(response => response.json())
     .then(json => {
+      this._getDistrictName(latitude, longitude)
+      .then(response => response.json())
+      .then(json => {
+        this.setState({district: json.documents[0].address_name})
+      });
+
       this._getStationName(json.documents[0].x, json.documents[0].y)
       .then(response => response.json())
       .then(json => {
@@ -61,7 +85,6 @@ export default class App extends Component {
           this.setState({
             pm10Value: json.list[0].pm10Value,
             pm25Value: json.list[0].pm25Value,
-            district: json.ArpltnInforInqireSvcVo.stationName,
             isLoaded: true
           })
         })
@@ -75,7 +98,7 @@ export default class App extends Component {
       <View style={styles.container}>
         <StatusBar hidden={true} />
         { isLoaded ? 
-        <Dust pm10Value={pm10Value} pm25Value={pm25Value} district={district}/> 
+        <Dust pm10Value={pm10Value} pm25Value={pm25Value} district={district} reload={this._reload}/> 
         : (
           <View style={styles.loading}>
             <MaterialIcons color='white' size={144} name='sentiment-very-satisfied' />
