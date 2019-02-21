@@ -3,6 +3,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo';
 import { MaterialIcons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
+import DustSimple from './DustSimple';
+import DustDetail from './DustDetail';
 
 const dustStatus = {
   'good': {
@@ -33,7 +35,16 @@ const dustStatus = {
 }
 
 // icon: sentiment-very-satisfied, sentiment-satisfied, sentiment-neutral, sentiment-dissatisfied, sentiment-very-dissatisfied
-function Dust({ pm10Value, pm25Value, district, reload }) {
+function Dust({ pm10Value, 
+  pm25Value, 
+  so2Value, 
+  coValue,
+  o3Value,
+  no2Value,
+  district, 
+  reload,
+  toggle,
+  changeView }) {
   let status = null;
   if (pm10Value >= 151 || pm25Value >= 76) {
     status = 'superBad';
@@ -46,9 +57,7 @@ function Dust({ pm10Value, pm25Value, district, reload }) {
   }
 
   return (
-    <LinearGradient 
-        colors={dustStatus[status].colors} 
-        style={styles.container}>
+    <LinearGradient colors={dustStatus[status].colors} style={styles.container}>
       <View style={styles.menu}>
         <MaterialIcons 
           color='white' 
@@ -58,7 +67,12 @@ function Dust({ pm10Value, pm25Value, district, reload }) {
           />
       </View>
       <View style={styles.upper}>
-        <MaterialIcons color='white' size={144} name={dustStatus[status].icon} />
+        <MaterialIcons 
+          color='white' 
+          size={144} 
+          name={dustStatus[status].icon} 
+          onPress={changeView}
+        />
         <Text style={styles.state}>
           {dustStatus[status].state}
         </Text>
@@ -66,17 +80,22 @@ function Dust({ pm10Value, pm25Value, district, reload }) {
           {district}
         </Text>
       </View>
-      <View style={styles.lower}>
-        <Text style={styles.title}>
-          미세먼지 농도 {pm10Value}
-        </Text>
-        <Text style={styles.title}>
-          초미세먼지 농도 {pm25Value}
-        </Text>
-        <Text style={styles.subtitle}>
-          {dustStatus[status].subtitle}
-        </Text>
-      </View>
+      {toggle ?  
+        <DustDetail 
+          pm10Value={pm10Value} 
+          pm25Value={pm25Value} 
+          so2Value={so2Value} 
+          coValue={coValue} 
+          o3Value={o3Value} 
+          no2Value={no2Value} 
+        />
+        : 
+        <DustSimple 
+          pm10Value={pm10Value} 
+          pm25Value={pm25Value} 
+          subtitle={dustStatus[status].subtitle} 
+        />
+      }
     </LinearGradient>
   )
 }
@@ -84,8 +103,14 @@ function Dust({ pm10Value, pm25Value, district, reload }) {
 Dust.propTypes = {
   pm10Value: PropTypes.string.isRequired,
   pm25Value: PropTypes.string.isRequired,
-  district:  PropTypes.string.isRequired,
-  reload: PropTypes.func.isRequired
+  so2Value: PropTypes.string.isRequired, 
+  coValue: PropTypes.string.isRequired,
+  o3Value: PropTypes.string.isRequired,
+  no2Value: PropTypes.string.isRequired,
+  district: PropTypes.string.isRequired,
+  toggle: PropTypes.bool.isRequired,
+  reload: PropTypes.func.isRequired,
+  changeView: PropTypes.func.isRequired
 }
 
 export default Dust;
@@ -99,7 +124,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'center',
     paddingRight: 20,
-    paddingTop: 20
+    paddingTop: 10
   },
   upper: {
     flex: 4,
@@ -117,24 +142,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     color: 'white',
     marginTop: 5,
-  },
-  lower: {
-    flex: 4,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-end',
-    paddingLeft: 25
-  },
-  title: {
-    fontSize: 30,
-    backgroundColor: 'transparent',
-    color: 'white',
-    marginBottom: 10,
-    fontWeight: '300'
-  },
-  subtitle: {
-    fontSize: 20,
-    backgroundColor: 'transparent',
-    color: 'white',
-    marginBottom: 50
-  },
+  }
 });

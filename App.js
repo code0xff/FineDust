@@ -7,9 +7,14 @@ import API_KEY from './keys.json';
 export default class App extends Component {
   state = {
     isLoaded: false,
+    toggle: false,
     error: null,
     pm10Value: null,
     pm25Value: null,
+    so2Value: null,
+    coValue: null,
+    o3Value: null,
+    no2Value: null,
     district: null
   };
 
@@ -17,6 +22,9 @@ export default class App extends Component {
     this._reload();
   }
 
+  _changeView = () => {
+    this.setState({toggle: !this.state.toggle});
+  }
   _reload = () => {
     this.setState({isLoaded: false});
 
@@ -85,6 +93,10 @@ export default class App extends Component {
           this.setState({
             pm10Value: json.list[0].pm10Value,
             pm25Value: json.list[0].pm25Value,
+            so2Value: json.list[0].so2Value,
+            coValue: json.list[0].coValue,
+            o3Value: json.list[0].o3Value,
+            no2Value: json.list[0].no2Value,
             isLoaded: true
           })
         })
@@ -93,12 +105,31 @@ export default class App extends Component {
   }
 
   render() {
-    const { isLoaded, pm10Value, pm25Value, district } = this.state;
+    const { isLoaded, 
+      pm10Value, 
+      pm25Value, 
+      so2Value, 
+      coValue,
+      o3Value,
+      no2Value,
+      toggle,
+      district } = this.state;
     return (
       <View style={styles.container}>
         <StatusBar hidden={true} />
         { isLoaded ? 
-        <Dust pm10Value={pm10Value} pm25Value={pm25Value} district={district} reload={this._reload}/> 
+        <Dust 
+          pm10Value={pm10Value} 
+          pm25Value={pm25Value} 
+          so2Value={so2Value}
+          coValue={coValue}
+          o3Value={o3Value}
+          no2Value={no2Value}
+          district={district} 
+          toggle={toggle}
+          reload={this._reload}
+          changeView={this._changeView}
+          /> 
         : (
           <View style={styles.loading}>
             <MaterialIcons color='white' size={144} name='sentiment-very-satisfied' />
