@@ -15,7 +15,8 @@ export default class App extends Component {
     coValue: null,
     o3Value: null,
     no2Value: null,
-    district: null
+    district: null,
+    timeStamp: null
   };
 
   componentDidMount () {
@@ -97,6 +98,7 @@ export default class App extends Component {
             coValue: json.list[0].coValue,
             o3Value: json.list[0].o3Value,
             no2Value: json.list[0].no2Value,
+            timeStamp: json.list[0].dataTime,
             isLoaded: true
           })
         })
@@ -113,7 +115,8 @@ export default class App extends Component {
       o3Value,
       no2Value,
       toggle,
-      district } = this.state;
+      district,
+      timeStamp } = this.state;
     return (
       <View style={styles.container}>
         <StatusBar hidden={true} />
@@ -126,6 +129,7 @@ export default class App extends Component {
           o3Value={o3Value}
           no2Value={no2Value}
           district={district} 
+          timeStamp={timeStamp} 
           toggle={toggle}
           reload={this._reload}
           changeView={this._changeView}

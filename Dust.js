@@ -21,7 +21,7 @@ const dustStatus = {
   },
   'bad': {
     name: 'normal',
-    colors: ['#FF0000', '#FFBF00'],
+    colors: ['#B40404', '#FF8000'],
     state: '나쁨',
     subtitle: '오늘은 집돌이가 되겠어!',
     icon: 'sentiment-dissatisfied'
@@ -42,6 +42,7 @@ function Dust({ pm10Value,
   o3Value,
   no2Value,
   district, 
+  timeStamp,
   reload,
   toggle,
   changeView }) {
@@ -59,25 +60,36 @@ function Dust({ pm10Value,
   return (
     <LinearGradient colors={dustStatus[status].colors} style={styles.container}>
       <View style={styles.menu}>
+        <View style={styles.menuLeft}>
+          <MaterialIcons 
+            color='white' 
+            size={40} 
+            name='menu' 
+            />
+        </View>
+        <View style={styles.menuRight}>
         <MaterialIcons 
           color='white' 
           size={40} 
           name='my-location' 
           onPress={reload}
           />
+        </View>  
       </View>
       <View style={styles.upper}>
         <MaterialIcons 
           color='white' 
           size={144} 
-          name={dustStatus[status].icon} 
-          onPress={changeView}
+          name={dustStatus[status].icon}
         />
         <Text style={styles.state}>
           {dustStatus[status].state}
         </Text>
-        <Text style={styles.district}>
+        <Text style={styles.info}>
           {district}
+        </Text>
+        <Text style={styles.info}>
+          {timeStamp}
         </Text>
       </View>
       {toggle ?  
@@ -87,13 +99,15 @@ function Dust({ pm10Value,
           so2Value={so2Value} 
           coValue={coValue} 
           o3Value={o3Value} 
-          no2Value={no2Value} 
+          no2Value={no2Value}
+          changeView={changeView}
         />
         : 
         <DustSimple 
           pm10Value={pm10Value} 
           pm25Value={pm25Value} 
           subtitle={dustStatus[status].subtitle} 
+          changeView={changeView}
         />
       }
     </LinearGradient>
@@ -108,6 +122,7 @@ Dust.propTypes = {
   o3Value: PropTypes.string.isRequired,
   no2Value: PropTypes.string.isRequired,
   district: PropTypes.string.isRequired,
+  timeStamp: PropTypes.string.isRequired,
   toggle: PropTypes.bool.isRequired,
   reload: PropTypes.func.isRequired,
   changeView: PropTypes.func.isRequired
@@ -121,10 +136,19 @@ const styles = StyleSheet.create({
   },
   menu: {
     flex: 1,
+    flexDirection: 'row'
+  },
+  menuLeft: {
+    flex: 1,
+    alignItems: 'flex-start',
+    paddingLeft: 20,
+    paddingTop: 30
+  },
+  menuRight: {
+    flex: 1,
     alignItems: 'flex-end',
-    justifyContent: 'center',
     paddingRight: 20,
-    paddingTop: 10
+    paddingTop: 30
   },
   upper: {
     flex: 4,
@@ -137,7 +161,7 @@ const styles = StyleSheet.create({
     color: 'white',
     marginTop: 10,
   },
-  district: {
+  info: {
     fontSize: 18,
     backgroundColor: 'transparent',
     color: 'white',
