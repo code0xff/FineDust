@@ -103,7 +103,8 @@ const styles = StyleSheet.create({
     flex: 2,
     justifyContent: 'center',
     borderTopWidth: 1,
-    borderColor:'white'
+    borderColor:'white',
+    paddingTop: 5
   },
   detail: {
     flex: 1,

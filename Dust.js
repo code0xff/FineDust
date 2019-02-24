@@ -89,7 +89,7 @@ function Dust({ pm10Value,
           {district}
         </Text>
         <Text style={styles.info}>
-          {timeStamp}
+          {timeStamp} 기준
         </Text>
       </View>
       {toggle ?  
