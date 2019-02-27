@@ -4,6 +4,9 @@ import Dust from './Dust';
 import { MaterialIcons } from '@expo/vector-icons';
 import API_KEY from './keys.json';
 
+const kakaoAPIKey = API_KEY.KAKAO_API_KEY;
+const airkoreaAPIKey = API_KEY.AIRKOREA_API_KEY;
+
 export default class App extends Component {
   state = {
     isLoaded: false,
@@ -42,8 +45,6 @@ export default class App extends Component {
   }
 
   _transformPostion = (latitude, longitude) => {
-    const kakaoAPIKey = API_KEY.KAKAO_API_KEY;
-    
     return fetch(`https://dapi.kakao.com/v2/local/geo/transcoord.json?x=${longitude}&y=${latitude}&input_coord=WGS84&output_coord=TM`, {
       method: 'GET',
       headers: new Headers({
@@ -54,8 +55,6 @@ export default class App extends Component {
   }
 
   _getDistrictName = (latitude, longitude) => {
-    const kakaoAPIKey = API_KEY.KAKAO_API_KEY;
-    
     return fetch(`https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${longitude}&y=${latitude}`, {
       method: 'GET',
       headers: new Headers({
@@ -66,12 +65,10 @@ export default class App extends Component {
   }
 
   _getStationName = (tmX, tmY) => {
-    const airkoreaAPIKey = API_KEY.AIRKOREA_API_KEY;
     return fetch(`http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getNearbyMsrstnList?tmX=${tmX}&tmY=${tmY}&pageNo=1&numOfRows=1&ServiceKey=${airkoreaAPIKey}&_returnType=json`);
   }
 
   _getFineDustData = (stationName) => {
-    const airkoreaAPIKey = API_KEY.AIRKOREA_API_KEY;
     return fetch(`http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?stationName=${stationName}&dataTerm=daily&pageNo=1&numOfRows=1&ServiceKey=${airkoreaAPIKey}&ver=1.3&_returnType=json`);
   }
 

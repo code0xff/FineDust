@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import PropTypes from 'prop-types';
-import { MaterialIcons } from '@expo/vector-icons';
 
 function DustDetail ({ pm10Value, 
   pm25Value,  
@@ -13,12 +12,7 @@ function DustDetail ({ pm10Value,
   return (        
     <View style={styles.lower}>
       <View style={styles.lowerHeader}>
-        <MaterialIcons 
-          color='white' 
-          size={50} 
-          name='expand-less' 
-          onPress={changeView}
-        />
+        <Text onPress={changeView} style={styles.toSimple}>접기</Text>
       </View>
       <View style={styles.lowerBody}>
         <View style={styles.detail}>
@@ -97,7 +91,13 @@ const styles = StyleSheet.create({
   lowerHeader:{
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    paddingBottom: 10
+  },
+  toSimple: {
+    fontSize: 17,
+    backgroundColor: 'transparent',
+    color: 'white'
   },
   lowerBody: {
     flex: 2,

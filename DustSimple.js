@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import PropTypes from 'prop-types';
-import { MaterialIcons } from '@expo/vector-icons';
 
 function DustSimple ({ pm10Value, pm25Value, subtitle, changeView }) {
   return (
@@ -18,12 +17,7 @@ function DustSimple ({ pm10Value, pm25Value, subtitle, changeView }) {
         </Text>
       </View>  
       <View style={styles.lowerFooter}>
-        <MaterialIcons 
-          color='white' 
-          size={50} 
-          name='expand-more' 
-          onPress={changeView}
-        />
+        <Text onPress={changeView} style={styles.toDetail}>더보기</Text>
       </View>
     </View>
   )
@@ -55,6 +49,12 @@ const styles = StyleSheet.create({
   lowerFooter: {
     flex: 1,
     alignItems: 'center',
+    paddingTop: 10
+  },
+  toDetail: {
+    fontSize: 17,
+    backgroundColor: 'transparent',
+    color: 'white'
   },
   title: {
     fontSize: 30,
