@@ -5,34 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import DustSimple from './DustSimple';
 import DustDetail from './DustDetail';
-
-const dustStatus = {
-  'good': {
-    colors: ['#00C6FB', '#005BEA'],
-    state: '좋음',
-    subtitle: '집구석에만 있지말고 나가세요 제발 ^^',
-    icon: 'sentiment-satisfied'
-  },
-  'normal': {
-    colors: ['#FEF253', '#FF7300'],
-    state: '보통',
-    subtitle: '적당히 좋은 적당히 안좋은 날',
-    icon: 'sentiment-neutral'
-  },
-  'bad': {
-    name: 'normal',
-    colors: ['#B40404', '#FF8000'],
-    state: '나쁨',
-    subtitle: '오늘은 집돌이가 되겠어!',
-    icon: 'sentiment-dissatisfied'
-  },
-  'superBad': {
-    colors: ['#000000', '#D8D8D8'],
-    state: '매우 나쁨',
-    subtitle: '으앙 살려줘...',
-    icon: 'sentiment-very-dissatisfied'
-  }
-}
+import dustCondition from './dustCondition.json';
 
 // icon: sentiment-very-satisfied, sentiment-satisfied, sentiment-neutral, sentiment-dissatisfied, sentiment-very-dissatisfied
 function Dust({ pm10Value, 
@@ -41,49 +14,41 @@ function Dust({ pm10Value,
   coValue,
   o3Value,
   no2Value,
+  condition,
   district, 
   timeStamp,
   reload,
   toggle,
-  changeView }) {
-  let status = null;
-  if (pm10Value >= 151 || pm25Value >= 76) {
-    status = 'superBad';
-  } else if (pm10Value >= 81 || pm25Value >= 36) {
-    status = 'bad';
-  } else if (pm10Value >= 31 || pm25Value >= 16) {
-    status = 'normal';
-  } else {
-    status = 'good';
-  }
-
-  return (
-    <LinearGradient colors={dustStatus[status].colors} style={styles.container}>
+  changeView,
+  shareInfomation }) {
+    return (
+    <LinearGradient colors={dustCondition[condition]['colors']} style={styles.container}>
       <View style={styles.menu}>
         <View style={styles.menuLeft}>
           <MaterialIcons 
             color='white' 
             size={40} 
-            name='menu' 
+            name='share' 
+            onPress={shareInfomation}
             />
         </View>
         <View style={styles.menuRight}>
-        <MaterialIcons 
-          color='white' 
-          size={40} 
-          name='my-location' 
-          onPress={reload}
-          />
+          <MaterialIcons 
+            color='white' 
+            size={40} 
+            name='my-location' 
+            onPress={reload}
+            />
         </View>  
       </View>
       <View style={styles.upper}>
         <MaterialIcons 
           color='white' 
           size={144} 
-          name={dustStatus[status].icon}
+          name={dustCondition[condition]['icon']}
         />
         <Text style={styles.state}>
-          {dustStatus[status].state}
+          {dustCondition[condition]['state']}
         </Text>
         <Text style={styles.info}>
           {district}
@@ -106,7 +71,7 @@ function Dust({ pm10Value,
         <DustSimple 
           pm10Value={pm10Value} 
           pm25Value={pm25Value} 
-          subtitle={dustStatus[status].subtitle} 
+          subtitle={dustCondition[condition]['subtitle']} 
           changeView={changeView}
         />
       }
@@ -121,11 +86,13 @@ Dust.propTypes = {
   coValue: PropTypes.string.isRequired,
   o3Value: PropTypes.string.isRequired,
   no2Value: PropTypes.string.isRequired,
+  condition: PropTypes.string.isRequired,
   district: PropTypes.string.isRequired,
   timeStamp: PropTypes.string.isRequired,
   toggle: PropTypes.bool.isRequired,
   reload: PropTypes.func.isRequired,
-  changeView: PropTypes.func.isRequired
+  changeView: PropTypes.func.isRequired,
+  shareInfomation: PropTypes.func.isRequired,
 }
 
 export default Dust;

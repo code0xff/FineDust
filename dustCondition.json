@@ -1,0 +1,27 @@
+{
+  "good": {
+    "colors": ["#00C6FB", "#005BEA"],
+    "state": "좋음",
+    "subtitle": "집구석에만 있지말고 나가세요 제발 ^^",
+    "icon": "sentiment-satisfied"
+  },
+  "normal": {
+    "colors": ["#FEF253", "#FF7300"],
+    "state": "보통",
+    "subtitle": "적당히 좋은 적당히 안좋은 날",
+    "icon": "sentiment-neutral"
+  },
+  "bad": {
+    "name": "normal",
+    "colors": ["#B40404", "#FF8000"],
+    "state": "나쁨",
+    "subtitle": "오늘은 집돌이가 되겠어!",
+    "icon": "sentiment-dissatisfied"
+  },
+  "superBad": {
+    "colors": ["#000000", "#D8D8D8"],
+    "state": "매우 나쁨",
+    "subtitle": "으앙 살려줘...",
+    "icon": "sentiment-very-dissatisfied"
+  }
+}

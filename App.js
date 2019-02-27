@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, Share } from 'react-native';
 import Dust from './Dust';
+import Alarm from './Alarm';
+import Setting from './Setting';
 import { MaterialIcons } from '@expo/vector-icons';
 import API_KEY from './keys.json';
+
+import Swiper from 'react-native-swiper';
 
 const kakaoAPIKey = API_KEY.KAKAO_API_KEY;
 const airkoreaAPIKey = API_KEY.AIRKOREA_API_KEY;
@@ -18,12 +22,22 @@ export default class App extends Component {
     coValue: null,
     o3Value: null,
     no2Value: null,
+    condition: null,
     district: null,
-    timeStamp: null
+    timeStamp: null,
   };
 
   componentDidMount () {
     this._reload();
+  }
+
+  _shareInfomation = () => {
+    Share.share({
+      message: `미세먼지 농도는 ${this.state.pm10Value}!\n초미세먼지 농도는 ${this.state.pm25Value}!`,
+      title: '미세먼지 공유하기'
+    },  {
+      dialogTitle: '미세먼지 공유하기'
+    });
   }
 
   _changeView = () => {
@@ -88,14 +102,29 @@ export default class App extends Component {
         this._getFineDustData(json.list[0].stationName)
         .then(response => response.json())
         .then(json => {
+          const pm10Value = json.list[0].pm10Value;
+          const pm25Value = json.list[0].pm25Value;
+
+          let condition = null; 
+          if (pm10Value >= 151 || pm25Value >= 76) {
+            condition = 'superBad';
+          } else if (pm10Value >= 81 || pm25Value >= 36) {
+            condition = 'bad';
+          } else if (pm10Value >= 31 || pm25Value >= 16) {
+            condition = 'normal';
+          } else {
+            condition = 'good';
+          }
+
           this.setState({
-            pm10Value: json.list[0].pm10Value,
-            pm25Value: json.list[0].pm25Value,
+            pm10Value: pm10Value,
+            pm25Value: pm25Value,
             so2Value: json.list[0].so2Value,
             coValue: json.list[0].coValue,
             o3Value: json.list[0].o3Value,
             no2Value: json.list[0].no2Value,
             timeStamp: json.list[0].dataTime,
+            condition: condition,
             isLoaded: true
           })
         })
@@ -111,6 +140,7 @@ export default class App extends Component {
       coValue,
       o3Value,
       no2Value,
+      condition,
       toggle,
       district,
       timeStamp } = this.state;
@@ -118,19 +148,38 @@ export default class App extends Component {
       <View style={styles.container}>
         <StatusBar hidden={true} />
         { isLoaded ? 
-        <Dust 
-          pm10Value={pm10Value} 
-          pm25Value={pm25Value} 
-          so2Value={so2Value}
-          coValue={coValue}
-          o3Value={o3Value}
-          no2Value={no2Value}
-          district={district} 
-          timeStamp={timeStamp} 
-          toggle={toggle}
-          reload={this._reload}
-          changeView={this._changeView}
-          /> 
+        <Swiper 
+          style={styles.wrapper} 
+          showsButtons={true} 
+          loop={false} 
+          index={1}
+          dotColor='white'
+          activeDotColor='#848484' 
+          prevButton={<Text style={styles.buttonText}>‹</Text>}
+          nextButton={<Text style={styles.buttonText}>›</Text>}
+          >
+          <Alarm 
+            condition={condition} 
+            />
+          <Dust 
+            pm10Value={pm10Value} 
+            pm25Value={pm25Value} 
+            so2Value={so2Value}
+            coValue={coValue}
+            o3Value={o3Value}
+            no2Value={no2Value}
+            condition={condition}
+            district={district} 
+            timeStamp={timeStamp} 
+            toggle={toggle}
+            reload={this._reload}
+            changeView={this._changeView}
+            shareInfomation={this._shareInfomation}
+            />
+          <Setting 
+            condition={condition}
+            />
+          </Swiper>
         : (
           <View style={styles.loading}>
             <MaterialIcons color='white' size={144} name='sentiment-very-satisfied' />
@@ -148,6 +197,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  wrapper: {
+  },
   errorText: {
     color: 'red',
     backgroundColor: 'transparent',
@@ -164,4 +215,8 @@ const styles = StyleSheet.create({
     color: 'white',
     marginBottom: 100
   },
+  buttonText: {
+    fontSize: 50,
+    color: 'white'
+  }
 });
