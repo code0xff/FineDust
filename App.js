@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, Share } from 'react-native';
 import Dust from './Dust';
-import Alarm from './Alarm';
 import Setting from './Setting';
 import { MaterialIcons } from '@expo/vector-icons';
 import API_KEY from './keys.json';
+import dustCondition from './dustCondition.json';
 
 import Swiper from 'react-native-swiper';
 
@@ -33,7 +33,7 @@ export default class App extends Component {
 
   _shareInfomation = () => {
     Share.share({
-      message: `미세먼지 농도는 ${this.state.pm10Value}!\n초미세먼지 농도는 ${this.state.pm25Value}!`,
+      message: `미세먼지 농도는 ${this.state.pm10Value}!\n초미세먼지 농도는 ${this.state.pm25Value}!\n${dustCondition[this.state.condition].subtitle}`,
       title: '미세먼지 공유하기'
     },  {
       dialogTitle: '미세먼지 공유하기'
@@ -43,6 +43,7 @@ export default class App extends Component {
   _changeView = () => {
     this.setState({toggle: !this.state.toggle});
   }
+  
   _reload = () => {
     this.setState({isLoaded: false});
 
@@ -152,15 +153,12 @@ export default class App extends Component {
           style={styles.wrapper} 
           showsButtons={true} 
           loop={false} 
-          index={1}
+          index={0}
           dotColor='white'
           activeDotColor='#848484' 
           prevButton={<Text style={styles.buttonText}>‹</Text>}
           nextButton={<Text style={styles.buttonText}>›</Text>}
           >
-          <Alarm 
-            condition={condition} 
-            />
           <Dust 
             pm10Value={pm10Value} 
             pm25Value={pm25Value} 
