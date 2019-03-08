@@ -12,7 +12,7 @@ function DustDetail ({ pm10Value,
   return (        
     <View style={styles.lower}>
       <View style={styles.lowerHeader}>
-        <Text onPress={changeView} style={styles.toSimple}>접기</Text>
+        <Text onPress={changeView} style={styles.toSimple}>접어두기</Text>
       </View>
       <View style={styles.lowerBody}>
         <View style={styles.detail}>

@@ -8,7 +8,7 @@ function Setting ({ condition }) {
   return (
     <LinearGradient colors={dustCondition[condition]['colors']} style={styles.container}>
       <Text>
-        alarm area!
+        setting area!
       </Text>
     </LinearGradient>
   )
